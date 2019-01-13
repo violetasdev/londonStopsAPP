@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>London Bus Stops App by VS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
+
+    <link rel="stylesheet" href="css/themes/darkLondon.min.css" />
+    <link rel="stylesheet" href="css/themes/jquery.mobile.icons.min.css" />
+    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css" />
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+    <style>
+        #map,
+        #mapPage {
+            height: 100%;
+        }
+
+        #map-content {
+            height: 100%;
+            padding: 0px;
+            margin: 0px;
+            z-index: -1;
+        }
+
+        #imgHome {
+            padding-bottom: 10%;
+        }
+
+        .labelSpan {
+            font-weight: normal;
+        }
+
+        .liDetails {
+            white-space: normal;
+            font-weight: bold
+        }
+
+        #hHome {
+            color: #c1272d;
+            text-align: center;
+        }
+
+        h3 {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div data-role="page" id="home" data-theme="a">
+        <div data-role="header" data-theme="a">
+            <h1>Stops Info</h1>
+            <a id="start" href="#" data-icon="star" class="ui-btn-right">Start</a>
+            <a id="mview" href="#" data-icon="location" class="ui-btn-left">Map View</a>
+            <!-- /button name, icon and location definition -->
+        </div><!-- /header -->
+
+        <div data-role="content">
+            <h1 id="hHome">London Bus Stops</h1>
+            <div id="imgHome">
+                <img src='img/bus.png' style="display:block;margin:0 auto;" />
+            </div>
+
+            <div id="intro">
+                <h3>Welcome to the London Bus Stop info!</h3>
+
+                <ul data-role="listview" data-inset="true">
+                    <li style="white-space: normal;text-align: center">
+                        This application will help you to find the details for each station in the London Bus System.<br><br>
+                        The Stops Service Status is updated in real time.<br><br>
+                        Just click in the <strong>Start</strong> button at the top of the screen to display the searching list!</li>
+                </ul>
+            </div>
+        </div><!-- /content -->
+    </div><!-- /page -->
+
+
+
+    <div data-role="page" id="search" data-theme="a">
+        <div data-role="header" data-theme="a">
+            <h1>Stops Info</h1>
+            <a id="info" href="#" data-icon="star" class="ui-btn-right">Info</a>
+            <a id="mview" href="#" data-icon="location" class="ui-btn-left">Map View</a>
+            <!-- /button name, icon and location definition -->
+        </div><!-- /header -->
+
+        <div data-role="content">
+            <h1 id="hHome">Search Page</h1>
+            <div id="imgHome">
+                <img src='img/pin.png' style="display:block;margin:0 auto;" />
+            </div>
+
+            <div id="search" class="search">
+                <form class="ui-filterable">
+                    <input id="filterBasic-input" data-type="search">
+                </form>
+                <ul id="stations_list" data-role="listview" data-filter="true" data-input="#filterBasic-input">
+                </ul>
+            </div>
+
+        </div><!-- /content -->
+    </div><!-- /page -->
+
+
+    <!-- /Details page-->
+    <div data-role="page" id="details" data-theme="a">
+        <div data-role="header" data-add-back-btn="true" data-theme="a">
+            <h1>Station Details</h1>
+        </div><!-- /header -->
+        <div data-role="content">
+
+            <h1 id="stationName"></h1>
+            <img id="stationIcon" />
+            <div data-role="collapsible-set" data-iconpos="right" data-theme="a">
+                <div data-role="collapsible" data-collapsed="false">
+                    <h2>Basic Info</h2>
+                    <ul data-role="listview" data-inset="true">
+                        <li style="white-space: normal;" class="liDetails">Name <span id="Name" class="labelSpan"></span></li>
+                        <li style="white-space: normal;" class="liDetails">Type <span id="Type" class="labelSpan"></span></li>
+                        <li style="white-space: normal;" class="liDetails">Help Desk Available <span id="Help" class="labelSpan"></span></li>
+                    </ul>
+                </div>
+
+                <div data-role="collapsible" data-theme="a">
+                    <h2>Location Details</h2>
+                    <ul data-role="listview" data-inset="true">
+                        <li style="white-space: normal;" class="liDetails">Address <span id="Address" class="labelSpan"></span></span></li>
+                        <li style="white-space: normal;" class="liDetails">Phone Number <span id="Phone" class="labelSpan"></span></li>
+                        <li style="white-space: normal;" class="liDetails">WiFi Access <span id="Wifi" class="labelSpan"></span></li>
+                    </ul>
+                </div>
+                <div data-role="collapsible">
+                    <h2>Available Facilities</h2>
+                    <ul data-role="listview" data-inset="true">
+                        <li style="white-space: normal;" class="liDetails">Waiting Room <span id="Waiting" class="labelSpan"></span></li>
+                        <li style="white-space: normal;" class="liDetails">Car Parking <span id="Car" class="labelSpan"></span></li>
+                        <li style="white-space: normal;" class="liDetails">Toilets Service <span id="Toilets" class="labelSpan"></span></li>
+                    </ul>
+                </div>
+            </div><!-- /collapsible group -->
+        </div><!-- /content -->
+    </div><!-- /page -->
+
+
+    <!-- /Map page-->
+    <div data-role="page" id="mapPage" data-theme="a">
+        <div data-role="header" data-position="fixed" data-theme="a">
+            <a id="backButton" class="ui-btn ui-corner-all ui-shadow ui-btn-left ui-btn-a ui-toolbar-back-btn ui-icon-carat-l ui-btn-icon-left"
+                href="#" data-rel="back" data-transition="slide" data-direction="reverse">Back</a>
+            <h1>Bus Stops Map</h1>
+        </div>
+
+        <div id="map-content" data-role="content">
+            <div id="map"></div>
+        </div>
+    </div>
+    <script>
+        $(window).load(function () {
+
+            document.getElementById('map').style.display = "block";
+            var element = $('#mapPage');
+            element.height(element.height() - 42);
+            window.map = L.map('map', { zoomControl: false }).setView([51.520599, -0.134361], 13);
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+
+            }).addTo(map);
+        });
+    </script>
+    <script src="./mycode.js"></script>
+
+</body>
+
+</html>
